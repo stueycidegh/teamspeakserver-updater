@@ -12,14 +12,14 @@ if [[ $backup =~ ^([yY][eE][sS]|[yY])$ ]]
 
 then
 
-	cp /etc/init.d/ts3 ts3-process.bak
+        echo "Backing up - Please wait..."
 
-	zip -r9 backups/ts$today.zip ./* &>> update.log
+        cp /etc/init.d/ts3 ts3-process.bak
 
-	echo "Successfully backed up"
-	
-	echo "Continuing..."
-	
+        zip -r9 backups/ts$today.zip ./* &>> update.log
+
+        echo "Successfully backed up"
+
 fi
 
 read -r -p "Are you sure you want to update? [y/N]: " confirm
@@ -28,34 +28,36 @@ if [[ $confirm =~ ^([yY][eE][sS]|[yY])$ ]]
 
 then
 
-	cd /opt/teamspeak3-server/ &>> update.log
+        echo "Updating - Please wait..."
 
-	wget http://dl.4players.de/ts/releases/$version/teamspeak3-server_linux_amd64-$version.tar.bz2 &>> update.log
+        cd /opt/teamspeak3-server/ &>> update.log
 
-	tar -xjvf teamspeak3-server_linux_amd64-$version.tar.bz2 &>>  update.log
+        wget http://dl.4players.de/ts/releases/$version/teamspeak3-server_linux_amd64-$version.tar.bz2 &>> update.log
 
-	cd ./teamspeak3-server_linux_amd64 &>> update.log
+        tar -xjvf teamspeak3-server_linux_amd64-$version.tar.bz2 &>>  update.log
 
-	rsync -av * ../ &>> update.log
+        cd ./teamspeak3-server_linux_amd64 &>> update.log
 
-	cd .. &>> /update.log
+        rsync -av * ../ &>> update.log
 
-	rm teamspeak3-server_linux_amd64-$version.tar.bz2 &>> update.log
+        cd .. &>> /update.log
 
-	rm -rf teamspeak3-server_linux_amd64 &>> /update.log
+        rm teamspeak3-server_linux_amd64-$version.tar.bz2 &>> update.log
 
-	rm ts3-process.bak
+        rm -rf teamspeak3-server_linux_amd64 &>> /update.log
 
-	/etc/init.d/ts3 restart &>> update.log
+        rm ts3-process.bak
 
-	chown -R teamspeak3-user:teamspeak3-user *
-	
-	echo "Teamspeak Updated!" >> update.log
+        /etc/init.d/ts3 restart &>> update.log
 
-	echo "Server successfully updated"
+        chown -R teamspeak3-user:teamspeak3-user *
+
+        echo "Teamspeak Updated!" >> update.log
+
+        echo "Server successfully updated"
 
 else
 
-	exit
+        exit
 
 fi
